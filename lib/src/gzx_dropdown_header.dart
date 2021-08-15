@@ -25,6 +25,12 @@ class GZXDropDownHeader extends StatefulWidget {
   final List<GZXDropDownHeaderItem> items;
   final GlobalKey stackKey;
 
+  // 宽度
+  final double? width;
+
+  // 宽高比
+  final double? ratio;
+
   /// Creates a dropdown header widget, Contains more than one header items.
   GZXDropDownHeader({
     Key? key,
@@ -43,6 +49,8 @@ class GZXDropDownHeader extends StatefulWidget {
     this.dividerColor = const Color(0xFFeeede6),
     this.onItemTap,
     this.color = Colors.white,
+    this.width,
+    this.ratio,
   }) : super(key: key);
 
   @override
@@ -57,6 +65,7 @@ class _GZXDropDownHeaderState extends State<GZXDropDownHeader>
   GlobalKey _keyDropDownHeader = GlobalKey();
   TextStyle? _dropDownStyle;
   Color? _iconDropDownColor;
+  late double _width;
 
   @override
   void initState() {
@@ -83,12 +92,22 @@ class _GZXDropDownHeaderState extends State<GZXDropDownHeader>
 
     MediaQueryData mediaQuery = MediaQuery.of(context);
     _screenWidth = mediaQuery.size.width;
+    if (widget.width == null){
+      _width = _screenWidth;
+    } else {
+      _width = _screenWidth;
+    }
+
+    double ratio = (_width / _menuCount) / widget.height
+    if (widget.ratio != null){
+      ratio = widget.ratio;
+    }
     _menuCount = widget.items.length;
 
     var gridView = GridView.count(
       physics: NeverScrollableScrollPhysics(),
       crossAxisCount: _menuCount,
-      childAspectRatio: (_screenWidth / _menuCount) / widget.height,
+      childAspectRatio: ratio,
       children: widget.items.map<Widget>((item) {
         return _menu(item);
       }).toList(),
