@@ -98,9 +98,9 @@ class _GZXDropDownHeaderState extends State<GZXDropDownHeader>
       _width = _screenWidth;
     }
 
-    double ratio = (_width / _menuCount) / widget.height
+    double ratio = (_width / _menuCount) / widget.height;
     if (widget.ratio != null){
-      ratio = widget.ratio;
+      ratio = widget.ratio!;
     }
     _menuCount = widget.items.length;
 
