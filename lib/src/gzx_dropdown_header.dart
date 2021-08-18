@@ -17,7 +17,7 @@ class GZXDropDownHeader extends StatefulWidget {
   final Color? iconDropDownColor;
 
 //  final List<String> menuStrings;
-  final double height;
+  final double? height;
   final double dividerHeight;
   final Color dividerColor;
   final GZXDropdownMenuController controller;
@@ -92,17 +92,17 @@ class _GZXDropDownHeaderState extends State<GZXDropDownHeader>
 
     MediaQueryData mediaQuery = MediaQuery.of(context);
     _screenWidth = mediaQuery.size.width;
-    if (widget.width == null){
-      _width = _screenWidth;
+    if (widget.width != null){
+      _width = widget.width!;
     } else {
       _width = _screenWidth;
     }
 
-    double ratio = (_width / _menuCount) / widget.height;
+    _menuCount = widget.items.length;
+    double ratio = (_width / _menuCount) / (widget.height ?? 40);
     if (widget.ratio != null){
       ratio = widget.ratio!;
     }
-    _menuCount = widget.items.length;
 
     var gridView = GridView.count(
       physics: NeverScrollableScrollPhysics(),
@@ -115,7 +115,7 @@ class _GZXDropDownHeaderState extends State<GZXDropDownHeader>
 
     return Container(
       key: _keyDropDownHeader,
-      height: widget.height,
+      height: widget.height ?? 40,
 //      padding: EdgeInsets.only(top: 1, bottom: 1),
       decoration: BoxDecoration(
         border: Border.all(
@@ -123,7 +123,7 @@ class _GZXDropDownHeaderState extends State<GZXDropDownHeader>
           width: widget.borderWidth,
         ),
       ),
-      child: gridView,
+      child: Container(child: gridView, width: _width,),
     );
   }
 
@@ -139,13 +139,13 @@ class _GZXDropDownHeaderState extends State<GZXDropDownHeader>
     return GestureDetector(
       onTap: () {
         final RenderBox? overlay =
-            widget.stackKey.currentContext!.findRenderObject() as RenderBox?;
+        widget.stackKey.currentContext!.findRenderObject() as RenderBox?;
 
         final RenderBox dropDownItemRenderBox =
-            _keyDropDownHeader.currentContext!.findRenderObject() as RenderBox;
+        _keyDropDownHeader.currentContext!.findRenderObject() as RenderBox;
 
         var position =
-            dropDownItemRenderBox.localToGlobal(Offset.zero, ancestor: overlay);
+        dropDownItemRenderBox.localToGlobal(Offset.zero, ancestor: overlay);
 //        print("POSITION : $position ");
         var size = dropDownItemRenderBox.size;
 //        print("SIZE : $size");
@@ -194,8 +194,8 @@ class _GZXDropDownHeaderState extends State<GZXDropDownHeader>
                     !_isShowDropDownItemWidget
                         ? item.iconData ?? Icons.arrow_drop_down
                         : item.iconDropDownData ??
-                            item.iconData ??
-                            Icons.arrow_drop_up,
+                        item.iconData ??
+                        Icons.arrow_drop_up,
                     color: _isShowDropDownItemWidget
                         ? _iconDropDownColor
                         : item.style?.color ?? widget.iconColor,
@@ -207,13 +207,13 @@ class _GZXDropDownHeaderState extends State<GZXDropDownHeader>
             index == widget.items.length - 1
                 ? Container()
                 : Container(
-                    height: widget.dividerHeight,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        right: BorderSide(color: widget.dividerColor, width: 1),
-                      ),
-                    ),
-                  ),
+              height: widget.dividerHeight,
+              decoration: BoxDecoration(
+                border: Border(
+                  right: BorderSide(color: widget.dividerColor, width: 1),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -229,10 +229,10 @@ class GZXDropDownHeaderItem {
   final TextStyle? style;
 
   GZXDropDownHeaderItem(
-    this.title, {
-    this.iconData,
-    this.iconDropDownData,
-    this.iconSize,
-    this.style,
-  });
+      this.title, {
+        this.iconData,
+        this.iconDropDownData,
+        this.iconSize,
+        this.style,
+      });
 }
